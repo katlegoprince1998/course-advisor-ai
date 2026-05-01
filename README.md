@@ -1,9 +1,9 @@
 # 🎓 Smart University Course & Career Advisor
 
-![Spring Boot](https://shields.io)
-![Spring AI](https://shields.io)
-![Groq](https://shields.io)
-![Java](https://shields.io)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-6DB33F?logo=springboot&logoColor=white)
+![Spring AI](https://img.shields.io/badge/Spring%20AI-6DB33F?logo=spring&logoColor=white)
+![Groq](https://img.shields.io/badge/Groq-000000?logo=groq&logoColor=white)
+![Java](https://img.shields.io/badge/Java-ED8B00?logo=java&logoColor=white)
 
 A Retrieval-Augmented Generation (RAG) application that helps students find the perfect university courses based on their career goals. It utilizes high-speed inference via Groq and semantic search powered by Spring AI.
 
