@@ -22,9 +22,14 @@ public class GroqService {
         try {
             Map<String, Object> requestBody = Map.of(
                     "model", "openai/gpt-oss-120b",
-                    "temperature", 0.5,
-                    "max_tokens", 500,
+                    "temperature", 0.3,
+                    "max_tokens", 800,
+                    "top_p", 0.9,
                     "messages", List.of(
+                            Map.of(
+                                    "role", "system",
+                                    "content", "You are a helpful AI career advisor that returns ONLY valid JSON."
+                            ),
                             Map.of(
                                     "role", "user",
                                     "content", buildPrompt(userRequest)
@@ -48,40 +53,43 @@ public class GroqService {
         }
     }
 
-    // 🔥 Clean structured prompt
     private String buildPrompt(String userRequest) {
         return """
-                You are an AI Career Advisor for South African university students.
+            You are an AI Career Advisor for South African students.
 
-                Your task is to recommend suitable careers and courses based on the user's question.
+            STRICT RULES:
+            - Return ONLY valid JSON
+            - Return EXACTLY 2 recommendations
+            - No extra text, no markdown
 
-                Return ONLY valid JSON in this exact format:
+            JSON format:
+            {
+              "recommendations": [
                 {
-                  "recommendations": [
-                    {
-                      "rank": 1,
-                      "career": "",
-                      "course": "",
-                      "reason": "",
-                      "skills_required": [],
-                      "job_outlook": ""
-                    }
-                  ]
+                  "rank": 1,
+                  "career": "",
+                  "university": "",
+                  "course": "",
+                  "reason": "",
+                  "skills_required": [],
+                  "job_outlook": ""
+                },
+                {
+                  "rank": 2,
+                  "career": "",
+                  "university": "",
+                  "course": "",
+                  "reason": "",
+                  "skills_required": [],
+                  "job_outlook": ""
                 }
+              ]
+            }
 
-                Rules:
-                - No markdown
-                - No explanations outside JSON
-                - No extra text
-                - Ensure JSON is valid
-                - "rank" must be a number starting from 1
-                - Provide at least 3 recommendations
-
-                User Question:
-                """ + userRequest;
+            User Question:
+            """ + userRequest;
     }
 
-    // 🔥 Extract only AI message content
     private String extractContent(Map<String, Object> response) {
         try {
             List<?> choices = (List<?>) response.get("choices");
@@ -91,7 +99,7 @@ public class GroqService {
             return (String) message.get("content");
 
         } catch (Exception e) {
-            return "Error parsing AI response: " + response;
+            return "Error parsing response: " + response;
         }
     }
 }

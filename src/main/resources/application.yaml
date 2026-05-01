@@ -12,4 +12,4 @@ spring:
         model: nomic-embed-text
 
 server:
-  port: ${PORT:8085}
+  port: ${PORT:8082}

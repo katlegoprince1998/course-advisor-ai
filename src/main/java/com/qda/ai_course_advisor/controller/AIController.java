@@ -16,6 +16,9 @@ public class AIController {
 
     @PostMapping("/ask")
     public String ask(@RequestBody AskRequest request) {
+        if (request.getQuestion() == null || request.getQuestion().isBlank()) {
+            throw new IllegalArgumentException("Question cannot be empty");
+        }
         return groqService.askAI(request.getQuestion());
     }
 }

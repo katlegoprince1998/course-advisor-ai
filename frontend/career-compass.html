@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Career Compass — AI Career Intelligence</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #0b0d11; --bg-1: #12151c; --bg-2: #1a1e28; --bg-3: #222738;
+      --border: rgba(255,255,255,.07); --border-hi: rgba(255,255,255,.14);
+      --text-1: #f0f1f4; --text-2: #9ba3b8; --text-3: #5d6478;
+      --accent: #4f8ef7; --accent-dim: rgba(79,142,247,.15); --accent-glow: rgba(79,142,247,.30);
+      --gold: #e8b84b; --gold-dim: rgba(232,184,75,.12);
+      --green: #34c98a; --green-dim: rgba(52,201,138,.12);
+      --red: #f05c5c;
+      --radius-sm: 8px; --radius-md: 14px; --radius-lg: 20px;
+      --shadow-card: 0 1px 3px rgba(0,0,0,.4), 0 8px 24px rgba(0,0,0,.3);
+      --shadow-glow: 0 0 40px rgba(79,142,247,.08);
+      --ease: cubic-bezier(.4,0,.2,1); --dur: .28s;
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Sora', sans-serif;
+      background: var(--bg);
+      color: var(--text-1);
+      min-height: 100vh;
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+    body::before {
+      content: '';
+      position: fixed; inset: 0;
+      background-image:
+        linear-gradient(rgba(255,255,255,.015) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.015) 1px, transparent 1px);
+      background-size: 48px 48px;
+      pointer-events: none; z-index: 0;
+    }
+    body::after {
+      content: '';
+      position: fixed;
+      width: 700px; height: 700px;
+      background: radial-gradient(circle, rgba(79,142,247,.07) 0%, transparent 70%);
+      top: -200px; left: 50%;
+      transform: translateX(-50%);
+      pointer-events: none; z-index: 0;
+    }
+    .page {
+      position: relative; z-index: 1;
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 56px 24px 100px;
+    }
+    nav {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 72px;
+      animation: fadeDown .6s var(--ease) both;
+    }
+    .nav-logo {
+      display: flex; align-items: center; gap: 10px;
+      font-size: .8rem; font-weight: 600; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--text-2);
+    }
+    .nav-logo-icon {
+      width: 32px; height: 32px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(79,142,247,.3);
+      border-radius: var(--radius-sm);
+      display: flex; align-items: center; justify-content: center;
+    }
+    .nav-logo-icon svg { width: 16px; height: 16px; color: var(--accent); }
+    .nav-badge {
+      font-size: .7rem; font-weight: 500; color: var(--text-3);
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 100px; padding: 4px 12px; letter-spacing: .04em;
+    }
+    .hero { margin-bottom: 56px; animation: fadeUp .7s var(--ease) both; }
+    .hero-eyebrow {
+      display: inline-flex; align-items: center; gap: 7px;
+      font-size: .72rem; font-weight: 600; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 20px;
+    }
+    .hero-eyebrow-dot {
+      width: 6px; height: 6px; background: var(--accent);
+      border-radius: 50%; animation: pulse 2s infinite;
+    }
+    h1 {
+      font-family: 'Libre Baskerville', serif;
+      font-size: clamp(2.2rem, 5.5vw, 3.6rem);
+      font-weight: 700; line-height: 1.12;
+      letter-spacing: -.025em; color: var(--text-1); margin-bottom: 18px;
+    }
+    h1 span { font-style: italic; font-weight: 400; color: var(--text-2); }
+    .hero-sub {
+      font-size: 1rem; color: var(--text-2); font-weight: 300;
+      max-width: 520px; line-height: 1.7;
+    }
+    .ask-panel {
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px; margin-bottom: 48px;
+      animation: fadeUp .7s .1s var(--ease) both;
+      transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+    }
+    .ask-panel:focus-within { border-color: var(--border-hi); box-shadow: var(--shadow-glow); }
+    .ask-panel-top { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+    .ask-panel-icon { width: 18px; height: 18px; color: var(--text-3); flex-shrink: 0; }
+    .ask-panel-label { font-size: .72rem; font-weight: 600; letter-spacing: .09em; text-transform: uppercase; color: var(--text-3); }
+    textarea {
+      width: 100%; resize: none; background: transparent; border: none; outline: none;
+      font-family: 'Sora', sans-serif; font-size: .98rem; font-weight: 300;
+      color: var(--text-1); line-height: 1.65; min-height: 60px; max-height: 180px; margin-bottom: 20px;
+    }
+    textarea::placeholder { color: var(--text-3); }
+    .ask-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--border); padding-top: 18px; gap: 16px;
+    }
+    .ask-hint { font-size: .75rem; color: var(--text-3); display: flex; align-items: center; gap: 6px; }
+    .ask-hint kbd {
+      background: var(--bg-2); border: 1px solid var(--border-hi); border-radius: 4px;
+      padding: 1px 6px; font-family: 'Sora', sans-serif; font-size: .68rem; color: var(--text-2);
+    }
+    .ask-btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      background: var(--accent); color: #fff; border: none;
+      border-radius: var(--radius-sm); padding: 0 22px; height: 44px;
+      font-family: 'Sora', sans-serif; font-size: .85rem; font-weight: 600;
+      cursor: pointer; letter-spacing: .02em;
+      transition: background var(--dur) var(--ease), transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease), opacity var(--dur);
+    }
+    .ask-btn svg { width: 16px; height: 16px; transition: transform var(--dur) var(--ease); }
+    .ask-btn:hover { background: #6ba3f9; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(79,142,247,.4); }
+    .ask-btn:hover svg { transform: translateX(3px); }
+    .ask-btn:active { transform: translateY(0); }
+    .ask-btn:disabled { opacity: .4; cursor: not-allowed; transform: none; box-shadow: none; background: var(--accent); }
+    #loading {
+      display: none; align-items: center; gap: 16px;
+      padding: 40px 0; animation: fadeUp .4s var(--ease) both;
+    }
+    .spinner {
+      width: 22px; height: 22px; border: 2px solid var(--bg-3);
+      border-top-color: var(--accent); border-radius: 50%;
+      animation: spin .8s linear infinite; flex-shrink: 0;
+    }
+    .loading-label { font-size: .9rem; color: var(--text-2); font-weight: 300; }
+    .loading-label strong { color: var(--text-1); font-weight: 500; }
+    #error-msg {
+      display: none; align-items: flex-start; gap: 14px;
+      background: rgba(240,92,92,.08); border: 1px solid rgba(240,92,92,.25);
+      border-radius: var(--radius-md); padding: 18px 20px;
+      margin-bottom: 32px; animation: fadeUp .4s var(--ease) both;
+    }
+    #error-msg svg { width: 18px; height: 18px; color: var(--red); flex-shrink: 0; margin-top: 1px; }
+    .error-body { flex: 1; }
+    .error-title { font-size: .85rem; font-weight: 600; color: var(--red); margin-bottom: 3px; }
+    #error-text { font-size: .82rem; color: var(--text-2); line-height: 1.5; }
+    .placeholder-state {
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 80px 24px; text-align: center; animation: fadeUp .5s var(--ease) both;
+    }
+    .placeholder-icon-wrap {
+      width: 56px; height: 56px; border: 1px solid var(--border);
+      border-radius: var(--radius-md); display: flex; align-items: center; justify-content: center;
+      background: var(--bg-1); margin-bottom: 20px; color: var(--text-3);
+    }
+    .placeholder-icon-wrap svg { width: 24px; height: 24px; }
+    .placeholder-state h3 { font-size: 1rem; font-weight: 500; color: var(--text-2); margin-bottom: 8px; }
+    .placeholder-state p { font-size: .85rem; color: var(--text-3); max-width: 320px; font-weight: 300; line-height: 1.7; }
+    #results { animation: fadeUp .5s var(--ease) both; }
+    .results-header {
+      display: flex; align-items: center; justify-content: space-between; margin-bottom: 24px;
+    }
+    .results-header h2 {
+      font-family: 'Libre Baskerville', serif; font-size: 1.3rem; font-weight: 700; color: var(--text-1);
+    }
+    .results-meta { font-size: .75rem; color: var(--text-3); font-weight: 400; }
+    .cards-grid { display: grid; grid-template-columns: 1fr; gap: 20px; }
+    @media (min-width: 680px) { .cards-grid { grid-template-columns: 1fr 1fr; } }
+    .career-card {
+      background: var(--bg-1); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); overflow: hidden;
+      transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+      animation: cardIn .5s var(--ease) both;
+      display: flex; flex-direction: column;
+    }
+    .career-card:nth-child(2) { animation-delay: .1s; }
+    .career-card:hover { border-color: var(--border-hi); transform: translateY(-4px); box-shadow: var(--shadow-card), var(--shadow-glow); }
+    .card-stripe { height: 3px; width: 100%; }
+    .stripe-1 { background: linear-gradient(90deg, var(--accent), #8ab4ff); }
+    .stripe-2 { background: linear-gradient(90deg, var(--green), #7fefca); }
+    .card-header { padding: 24px 24px 20px; border-bottom: 1px solid var(--border); }
+    .card-header-top {
+      display: flex; align-items: flex-start; justify-content: space-between;
+      gap: 12px; margin-bottom: 14px;
+    }
+    .rank-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .68rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; padding: 5px 10px; border-radius: 6px; flex-shrink: 0;
+    }
+    .rank-chip svg { width: 11px; height: 11px; }
+    .rank-chip-1 { background: var(--accent-dim); color: var(--accent); border: 1px solid rgba(79,142,247,.25); }
+    .rank-chip-2 { background: var(--green-dim);  color: var(--green);  border: 1px solid rgba(52,201,138,.25); }
+    .salary-chip {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: .78rem; font-weight: 600; color: var(--gold);
+      background: var(--gold-dim); border: 1px solid rgba(232,184,75,.2);
+      border-radius: 6px; padding: 5px 10px;
+    }
+    .salary-chip svg { width: 13px; height: 13px; }
+    .career-title {
+      font-family: 'Libre Baskerville', serif;
+      font-size: 1.22rem; font-weight: 700; color: var(--text-1); line-height: 1.25;
+    }
+    .card-body { padding: 20px 24px 24px; flex: 1; display: flex; flex-direction: column; gap: 18px; }
+    .info-block {}
+    .info-block-label {
+      display: flex; align-items: center; gap: 7px;
+      font-size: .67rem; font-weight: 700; letter-spacing: .1em;
+      text-transform: uppercase; color: var(--text-3); margin-bottom: 7px;
+    }
+    .info-block-label svg { width: 13px; height: 13px; flex-shrink: 0; }
+    .info-block-value { font-size: .9rem; color: var(--text-1); font-weight: 400; line-height: 1.6; }
+    .info-block-value.muted { color: var(--text-2); font-weight: 300; font-size: .86rem; }
+    .divider-line { height: 1px; background: var(--border); }
+    .outlook-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; margin-top: 8px; }
+    .outlook-track { flex: 1; height: 4px; background: var(--bg-3); border-radius: 100px; overflow: hidden; }
+    .outlook-fill {
+      height: 100%; border-radius: 100px;
+      background: linear-gradient(90deg, var(--green), #7fefca);
+      transition: width 1.2s cubic-bezier(.4,0,.2,1) .4s;
+    }
+    .outlook-value { font-size: .78rem; font-weight: 600; color: var(--green); white-space: nowrap; }
+    .skills-wrap { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+    .skill-tag {
+      font-size: .73rem; font-weight: 500; color: var(--text-2);
+      background: var(--bg-2); border: 1px solid var(--border);
+      border-radius: 6px; padding: 4px 10px; letter-spacing: .02em;
+      transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+    }
+    .career-card:hover .skill-tag { border-color: rgba(79,142,247,.3); color: var(--accent); }
+    .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    @keyframes fadeUp   { from { opacity:0; transform:translateY(18px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes fadeDown { from { opacity:0; transform:translateY(-12px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes cardIn   { from { opacity:0; transform:translateY(22px) scale(.98); } to { opacity:1; transform:none; } }
+    @keyframes spin     { to { transform:rotate(360deg); } }
+    @keyframes pulse    { 0%,100%{opacity:1;} 50%{opacity:.4;} }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-3); border-radius: 3px; }
+    footer { text-align: center; margin-top: 80px; font-size: .73rem; color: var(--text-3); font-weight: 300; letter-spacing: .02em; }
+    footer span { color: var(--text-2); }
+  </style>
+</head>
+<body>
+<div class="page">
+
+  <nav>
+    <div class="nav-logo">
+      <div class="nav-logo-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+          <circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="9"/>
+          <line x1="12" y1="2" x2="12" y2="5"/><line x1="12" y1="19" x2="12" y2="22"/>
+          <line x1="2" y1="12" x2="5" y2="12"/><line x1="19" y1="12" x2="22" y2="12"/>
+        </svg>
+      </div>
+      Career Compass
+    </div>
+    <div class="nav-badge">AI-Powered &middot; v2.0</div>
+  </nav>
+
+  <div class="hero">
+    <div class="hero-eyebrow">
+      <span class="hero-eyebrow-dot"></span>
+      Intelligent Career Intelligence
+    </div>
+    <h1>Navigate your career<br/><span>with precision</span></h1>
+    <p class="hero-sub">Ask any career question and receive structured, data-backed recommendations covering role fit, education pathways, salaries, and skill requirements.</p>
+  </div>
+
+  <div class="ask-panel">
+    <div class="ask-panel-top">
+      <svg class="ask-panel-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span class="ask-panel-label">Ask Career Advice</span>
+    </div>
+    <textarea id="question" rows="2" placeholder="What should I study to become a high-paid software engineer?"></textarea>
+    <div class="ask-footer">
+      <span class="ask-hint"><kbd>Ctrl</kbd><kbd>Enter</kbd> to submit</span>
+      <button class="ask-btn" id="ask-btn" onclick="askQuestion()">
+        Analyse
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+          <line x1="5" y1="12" x2="19" y2="12"/>
+          <polyline points="12 5 19 12 12 19"/>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <div id="loading" style="display:none;">
+    <div class="spinner"></div>
+    <span class="loading-label"><strong>Analysing your question</strong> &mdash; finding the best career paths for you</span>
+  </div>
+
+  <div id="error-msg" style="display:none;">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+      <circle cx="12" cy="16" r=".5" fill="currentColor"/>
+    </svg>
+    <div class="error-body">
+      <div class="error-title">Request Failed</div>
+      <span id="error-text"></span>
+    </div>
+  </div>
+
+  <div id="results">
+    <div class="placeholder-state">
+      <div class="placeholder-icon-wrap">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+        </svg>
+      </div>
+      <h3>No recommendations yet</h3>
+      <p>Type a career question above and click Analyse to receive AI-powered guidance.</p>
+    </div>
+  </div>
+
+  <footer>Career Compass &nbsp;&middot;&nbsp; <span>AI-powered career intelligence</span> &nbsp;&middot;&nbsp; For guidance purposes only</footer>
+</div>
+
+<script>
+  const textarea = document.getElementById('question');
+  const btn      = document.getElementById('ask-btn');
+  const loading  = document.getElementById('loading');
+  const errorBox = document.getElementById('error-msg');
+  const errorTxt = document.getElementById('error-text');
+  const results  = document.getElementById('results');
+
+  textarea.addEventListener('input', () => {
+    textarea.style.height = 'auto';
+    textarea.style.height = Math.min(textarea.scrollHeight, 180) + 'px';
+  });
+  textarea.addEventListener('keydown', e => {
+    if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') askQuestion();
+  });
+
+  function setLoading(on) {
+    loading.style.display = on ? 'flex' : 'none';
+    btn.disabled = on;
+    if (on) errorBox.style.display = 'none';
+  }
+
+  function showError(msg) {
+    errorTxt.textContent = msg;
+    errorBox.style.display = 'flex';
+  }
+
+  function outlookToPercent(text) {
+    const t = (text || '').toLowerCase();
+    if (t.includes('excell') || t.includes('very high') || t.includes('outstanding')) return 95;
+    if (t.includes('high') || t.includes('strong') || t.includes('great'))            return 78;
+    if (t.includes('moderate') || t.includes('average') || t.includes('steady'))      return 55;
+    if (t.includes('low') || t.includes('declin'))                                    return 28;
+    return 65;
+  }
+
+  function esc(str) {
+    return String(str || '')
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+
+  const SVG = {
+    university: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+    book:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>`,
+    lightbulb:  `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="9" y1="18" x2="15" y2="18"/><line x1="10" y1="22" x2="14" y2="22"/><path d="M15.09 14c.18-.98.65-1.74 1.41-2.5A4.65 4.65 0 0 0 18 8 6 6 0 0 0 6 8c0 1 .23 2.23 1.5 3.5A4.61 4.61 0 0 1 8.91 14"/></svg>`,
+    trending:   `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>`,
+    tool:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+    dollar:     `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+    star:       `<svg viewBox="0 0 24 24" fill="currentColor" stroke="none"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>`,
+    leaf:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M2 22c1.25-.987 2.27-1.975 3.9-2.9a22.17 22.17 0 0 1 3.62-1.5C15 15.9 19.7 13 22 2c-6 1-11.5 3.5-14.6 8.5C5.7 13.5 4.9 16.8 2 22z"/></svg>`,
+    error:      `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><circle cx="12" cy="16" r=".5" fill="currentColor"/></svg>`,
+    edit:       `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>`,
+  };
+
+  function renderCards(recs) {
+    if (!Array.isArray(recs) || recs.length === 0) {
+      results.innerHTML = `<div class="placeholder-state"><div class="placeholder-icon-wrap">${SVG.lightbulb}</div><h3>No results returned</h3><p>Try rephrasing your question with more specific career interests or goals.</p></div>`;
+      return;
+    }
+
+    const rankLabel = ['Top Recommendation', 'Alternative Path'];
+
+    const cardsHTML = recs.map((rec, i) => {
+      const pct       = outlookToPercent(rec.jobOutlook || rec.job_outlook);
+      const rawSkills = rec.requiredSkills || rec.required_skills || '';
+      const skills    = Array.isArray(rawSkills) ? rawSkills : rawSkills.split(',').map(s => s.trim()).filter(Boolean);
+      const outlook   = esc(rec.jobOutlook   || rec.job_outlook   || 'Positive');
+      const salary    = esc(rec.salary       || rec.averageSalary || rec.average_salary || 'N/A');
+      const title     = esc(rec.careerTitle  || rec.career_title  || rec.title          || 'Career Path');
+      const university= esc(rec.university   || '');
+      const course    = esc(rec.course       || rec.program       || '');
+      const reason    = esc(rec.reason       || rec.description   || '');
+      const label     = rankLabel[i] || ('Option ' + (i + 1));
+      const rankIcon  = i === 0 ? SVG.star : SVG.leaf;
+
+      return `
+      <div class="career-card">
+        <div class="card-stripe stripe-${i + 1}"></div>
+        <div class="card-header">
+          <div class="card-header-top">
+            <div class="rank-chip rank-chip-${i + 1}">${rankIcon}${label}</div>
+            <div class="salary-chip">${SVG.dollar}${salary}</div>
+          </div>
+          <div class="career-title">${title}</div>
+        </div>
+        <div class="card-body">
+          ${(university || course) ? `
+            <div class="info-grid">
+              ${university ? `<div class="info-block"><div class="info-block-label">${SVG.university}University</div><div class="info-block-value">${university}</div></div>` : ''}
+              ${course    ? `<div class="info-block"><div class="info-block-label">${SVG.book}Course / Program</div><div class="info-block-value">${course}</div></div>` : ''}
+            </div>
+            <div class="divider-line"></div>` : ''}
+          ${reason ? `
+            <div class="info-block">
+              <div class="info-block-label">${SVG.lightbulb}Why this path</div>
+              <div class="info-block-value muted">${reason}</div>
+            </div>
+            <div class="divider-line"></div>` : ''}
+          <div class="info-block">
+            <div class="info-block-label">${SVG.trending}Job Outlook</div>
+            <div class="outlook-row">
+              <div class="outlook-track"><div class="outlook-fill" style="width:0%" data-pct="${pct}"></div></div>
+              <span class="outlook-value">${outlook}</span>
+            </div>
+          </div>
+          ${skills.length > 0 ? `
+            <div class="divider-line"></div>
+            <div class="info-block">
+              <div class="info-block-label">${SVG.tool}Required Skills</div>
+              <div class="skills-wrap">${skills.map(s => `<span class="skill-tag">${esc(s)}</span>`).join('')}</div>
+            </div>` : ''}
+        </div>
+      </div>`;
+    }).join('');
+
+    results.innerHTML = `
+      <div class="results-header">
+        <h2>Career Recommendations</h2>
+        <span class="results-meta">${recs.length} path${recs.length !== 1 ? 's' : ''} found</span>
+      </div>
+      <div class="cards-grid">${cardsHTML}</div>`;
+
+    requestAnimationFrame(() => {
+      setTimeout(() => {
+        document.querySelectorAll('.outlook-fill').forEach(el => {
+          el.style.width = el.dataset.pct + '%';
+        });
+      }, 120);
+    });
+  }
+
+  async function askQuestion() {
+    const question = textarea.value.trim();
+    if (!question) { textarea.focus(); return; }
+
+    setLoading(true);
+    results.innerHTML = '';
+
+    try {                      
+      const res = await fetch("http://localhost:8082/api/v1/ai/ask", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ question })
+      });
+
+      if (!res.ok) {
+        const body = await res.text().catch(() => '');
+        throw new Error('Server returned ' + res.status + (body ? ': ' + body.slice(0, 120) : ''));
+      }
+
+      const data = await res.json();
+      const recs = data.recommendations || data.careers || data.results || (Array.isArray(data) ? data : null);
+
+      if (!recs) throw new Error('Unexpected response format. Expected a "recommendations" array.');
+
+      renderCards(recs);
+      setTimeout(() => results.scrollIntoView({ behavior: 'smooth', block: 'start' }), 80);
+
+    } catch (err) {
+      const isNetwork = /failed to fetch|networkerror/i.test(err.message);
+      showError(isNetwork
+        ? 'Cannot reach the server at localhost:8082. Ensure your Spring Boot application is running.'
+        : err.message);
+      results.innerHTML = `<div class="placeholder-state"><div class="placeholder-icon-wrap">${SVG.error}</div><h3>Something went wrong</h3><p>Review the error above and try again.</p></div>`;
+    } finally {
+      setLoading(false);
+    }
+  }
+</script>
+</body>
+</html>
